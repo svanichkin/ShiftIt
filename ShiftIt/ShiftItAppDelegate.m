@@ -284,6 +284,9 @@ NSDictionary *allShiftActions = nil;
 }
 
 - (void)dealloc {
+    NSUserDefaultsController *userDefaultsController = [NSUserDefaultsController sharedUserDefaultsController];
+    [userDefaultsController removeObserver:self forKeyPath:FMTStr(@"values.%@", kShowMenuPrefKey)];
+
     [allShiftActions release];
     [windowManager_ release];
     [allHotKeys_ release];
