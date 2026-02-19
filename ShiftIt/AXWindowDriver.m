@@ -129,8 +129,6 @@ NSInteger const kAXWindowDriverErrorCode = 20104;
     [driver_ freeWindow_:ref_];
     [driver_ release];
 
-    CFRelease(ref_);
-
     [super dealloc];
 }
 
