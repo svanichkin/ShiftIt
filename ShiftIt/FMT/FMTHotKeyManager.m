@@ -164,7 +164,10 @@ SINGLETON_BOILERPLATE(FMTHotKeyManager, sharedHotKeyManager);
 	}
 	
 	if (hotKeyReg) {
-		UnregisterEventHotKey([hotKeyReg ref]);
+		OSStatus status = UnregisterEventHotKey([hotKeyReg ref]);
+		if (status != noErr) {
+			GTMLoggerError(@"Unable to unregister hotKey %@: OSStatus=%d", hotKey, (int)status);
+		}
 		if (hotKeyRegId) {
 			[allHotKeys removeObjectForKey:hotKeyRegId];
 		}
@@ -190,11 +193,11 @@ SINGLETON_BOILERPLATE(FMTHotKeyManager, sharedHotKeyManager);
 	hotKeyID.id = hotKeyIdSequence_++;
 	
 	EventHotKeyRef hotKeyRef;
-	RegisterEventHotKey([hotKey keyCode], [hotKey carbonModifiers], hotKeyID,
-						GetApplicationEventTarget(), 0, &hotKeyRef);
+	OSStatus status = RegisterEventHotKey([hotKey keyCode], [hotKey carbonModifiers], hotKeyID,
+										  GetApplicationEventTarget(), 0, &hotKeyRef);
 	
-	if (!hotKeyRef) {
-		GTMLoggerError(@"Unable to register hotKey: %@", hotKey);
+	if (status != noErr || !hotKeyRef) {
+		GTMLoggerError(@"Unable to register hotKey: %@ (OSStatus=%d)", hotKey, (int)status);
 		return;
 	}
 	
