@@ -106,17 +106,22 @@ static inline OSStatus hotKeyHandler(EventHandlerCallRef inHandlerCallRef,EventR
 	GetEventParameter(inEvent,kEventParamDirectObject,typeEventHotKeyID,NULL,
 					  sizeof(hotKeyID),NULL,&hotKeyID);
 	
-	NSNumber *id = [NSNumber numberWithInt:hotKeyID.id];
+	NSNumber *hotKeyIdentifier = [NSNumber numberWithInt:hotKeyID.id];
 	
-	TWHotKeyRegistartion* hotKeyReg = [allHotKeys objectForKey:id];
-	
-	if (hotKeyReg != nil) {
-		objc_msgSend([hotKeyReg provider], [hotKeyReg handler], [hotKeyReg userData]);
-		return noErr;
-	} else {
-		return eventNotHandledErr;
+	TWHotKeyRegistartion* hotKeyReg = [allHotKeys objectForKey:hotKeyIdentifier];
+		
+		if (hotKeyReg != nil) {
+            id provider = [hotKeyReg provider];
+			SEL handler = [hotKeyReg handler];
+			if ([provider respondsToSelector:handler]) {
+				void (*handlerImp)(id, SEL, id) = (void (*)(id, SEL, id))[provider methodForSelector:handler];
+				handlerImp(provider, handler, [hotKeyReg userData]);
+			}
+			return noErr;
+		} else {
+			return eventNotHandledErr;
+		}
 	}
-}
 
 @implementation FMTHotKeyManager
 
