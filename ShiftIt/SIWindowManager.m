@@ -139,6 +139,7 @@ NSInteger const kShiftItManagerFailureErrorCode = 2014;
     // get the first one - the front most window
     if ([windowInfoList count] == 0) {
         *error = SICreateError(kWindowManagerFailureErrorCode, @"Unable to find front window");
+        [allWindowsInfoList release];
         return NO;        
     }
     SIWindowInfo *frontWindowInfo = [SIWindowInfo windowInfoFromCGWindowInfoDictionary:[windowInfoList objectAtIndex:0]];
@@ -160,6 +161,7 @@ NSInteger const kShiftItManagerFailureErrorCode = 2014;
     
     if (w == nil) {
         *error = SICreateError(kWindowManagerFailureErrorCode, @"Unable to find focused window owner");
+        [allWindowsInfoList release];
         return NO;        
     } else {
         FMTLogDebug(@"Driver mapped window: %@", [w description]);
