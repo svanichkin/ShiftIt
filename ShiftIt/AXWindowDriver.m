@@ -334,7 +334,7 @@ NSInteger const kAXWindowDriverErrorCode = 20104;
     CFTypeRef value;
     AXError ret = 0;
 
-    if ((ret = AXUIElementCopyAttributeValue(element, kAXSizeAttribute, &value)) != kAXErrorSuccess) {
+    if ((ret = AXUIElementCopyAttributeValue(element, attributeName, &value)) != kAXErrorSuccess) {
         *flag = NO;
         return YES;
     }
