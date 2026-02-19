@@ -287,6 +287,12 @@ NSDictionary *allShiftActions = nil;
     NSUserDefaultsController *userDefaultsController = [NSUserDefaultsController sharedUserDefaultsController];
     [userDefaultsController removeObserver:self forKeyPath:FMTStr(@"values.%@", kShowMenuPrefKey)];
 
+    if (statusItem_) {
+        [[NSStatusBar systemStatusBar] removeStatusItem:statusItem_];
+        [statusItem_ release];
+        statusItem_ = nil;
+    }
+
     [allShiftActions release];
     [windowManager_ release];
     [allHotKeys_ release];
