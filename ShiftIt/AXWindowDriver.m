@@ -335,9 +335,16 @@ NSInteger const kAXWindowDriverErrorCode = 20104;
     CFTypeRef value;
     AXError ret = 0;
 
-    if ((ret = AXUIElementCopyAttributeValue(element, attributeName, &value)) != kAXErrorSuccess) {
+    ret = AXUIElementCopyAttributeValue(element, attributeName, &value);
+    if (ret == kAXErrorNoValue || ret == kAXErrorAttributeUnsupported) {
         *flag = NO;
         return YES;
+    }
+    if (ret != kAXErrorSuccess) {
+        *error = SICreateError(kAXFailureErrorCode,
+                               @"AXUIElementCopyAttributeValue failure: attribute: %@ error: %d",
+                               attributeName, ret);
+        return NO;
     }
 
     CFRelease(value);
