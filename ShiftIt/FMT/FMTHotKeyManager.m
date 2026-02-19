@@ -153,15 +153,21 @@ SINGLETON_BOILERPLATE(FMTHotKeyManager, sharedHotKeyManager);
 	
 	// search for the registration
 	TWHotKeyRegistartion *hotKeyReg = nil;
-	for (TWHotKeyRegistartion *e in [allHotKeys allValues]) {
+	NSNumber *hotKeyRegId = nil;
+	for (NSNumber *key in [allHotKeys allKeys]) {
+		TWHotKeyRegistartion *e = [allHotKeys objectForKey:key];
 		if ([hotKey isEqualTo:[e hotKey]]) {
 			hotKeyReg = e;
+			hotKeyRegId = key;
 			break;
 		}
 	}
 	
 	if (hotKeyReg) {
 		UnregisterEventHotKey([hotKeyReg ref]);
+		if (hotKeyRegId) {
+			[allHotKeys removeObjectForKey:hotKeyRegId];
+		}
 	} else {
 		// no registration found
 		GTMLoggerDebug(@"Unable to unregister hotKey: %@ - it has not been registered by this HotKeyManager", hotKey);
