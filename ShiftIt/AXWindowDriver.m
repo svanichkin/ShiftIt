@@ -268,6 +268,7 @@ NSInteger const kAXWindowDriverErrorCode = 20104;
     }
 
     *window = [[[AXWindow alloc] initWithRef:windowRef driver:self] autorelease];
+    CFRelease(windowRef);
 
     CFRelease(appRef);
     return YES;
