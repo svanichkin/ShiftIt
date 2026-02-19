@@ -468,7 +468,7 @@ const SimpleWindowGeometryChangeBlock shiftItThirdRight = ^AnchoredRect(NSRect w
     r.origin.y = r.origin.y < 0 ? 0 : r.origin.y;
     r.origin.y = r.origin.y > screenSize.height - r.size.height ? screenSize.height - r.size.height : r.origin.y;
 
-    return MakeAnchoredRect(r, !directions);
+    return MakeAnchoredRect(r, directions);
 }
 
 
